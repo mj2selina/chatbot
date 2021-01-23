@@ -1,6 +1,5 @@
 import json
 
-
 def read_json(path):
     data = ''
     with open(path,'r',encoding='UTF-8') as f:
