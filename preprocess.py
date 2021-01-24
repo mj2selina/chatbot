@@ -20,7 +20,7 @@ def process_data(data_list):
         for turn in turns:
             role = turn['role']
             if role == 'usr':
-                utterance = turn['utterance']
+                utterance = turn['utterance'].replace(' ','').replace('\t','')
                 dialog_act = turn['dialog_act']
                 intent_label = []
                 slot_label = [''] * len(utterance)

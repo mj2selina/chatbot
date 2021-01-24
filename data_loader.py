@@ -92,12 +92,14 @@ class JointProcessor(object):
             intent_label = self.intent_labels.index(intent) if intent in self.intent_labels else len(self.intent_labels) + 1
             # slot
             slot_labels = []
+            #print('----------')
+            #print(slot.split())
             for s in slot.split():
                 slot_labels.append(self.slot_labels.index(s) if s in self.slot_labels else len(self.slot_labels) + 1)
-            print('words:',len(words))
-            print('slot_labels:',len(slot_labels))
-            print(words)
-            print(slot_labels)
+            #print('words:',len(words))
+            #print('slot_labels:',len(slot_labels))
+            #print(words)
+            #print(slot_labels)
             assert len(words) == len(slot_labels)
             examples.append(InputExample(guid=guid, words=words, intent_label=intent_label, slot_labels=slot_labels))
         return examples
