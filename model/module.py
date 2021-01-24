@@ -1,6 +1,6 @@
 import torch.nn as nn
 
-def IntentClassifier(nn.Module):
+class IntentClassifier(nn.Module):
     def __init__(self,input_dim,num_intent_labels,dropout_rate=0.0):
         super(IntentClassifier,self).__init__()
         self.dropout = nn.Dropout(dropout_rate)
@@ -11,7 +11,7 @@ def IntentClassifier(nn.Module):
         x = self.dropout(x)
         return self.linear(x)
 
-def SlotClassifier(nn.Module):
+class SlotClassifier(nn.Module):
     def __init__(self,input_dim,num_slot_labels,dropout_rate=0.0):
         super(SlotClassifier,self).__init__()
         self.dropout = nn.Dropout(dropout_rate)

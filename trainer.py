@@ -5,9 +5,9 @@ from tqdm import tqdm,trange
 import numpy as np
 import torch
 from torch.utils.data import DataLoader,RandomSampler,SequentialSampler
-from transformers import BertConfig, AdamW,get_liner_schedule_with_warmup
+from transformers import BertConfig, AdamW,get_linear_schedule_with_warmup
 
-from utils import MODEL_CLASSES,compute_mertics,get_intent_labels,get_slot_labels
+from utils import MODEL_CLASSES,compute_metrics,get_intent_labels,get_slot_labels
 
 logger = logging.getLogger(__name__)
 
@@ -119,10 +119,10 @@ class Trainer(object):
                 break
         return global_step,tr_loss / global_step
 
-    def evaluate(self.mode):
+    def evaluate(self,mode):
         if mode == 'test':
             dataset = self.test_dataset
-        elif mode = 'dev':
+        elif mode == 'dev':
             dataset = self.dev_dataset
         else:
             raise Exception("Only dev and test dataset available")

@@ -68,9 +68,9 @@ class JointProcessor(object):
         self.intent_labels = get_intent_labels(args)
         self.slot_labels = get_slot_labels(args)
 
-        self.input_file = 'data/train/train_data.txt'
-        self.intent_label_file = 'data/train/train_intent_label.txt'
-        self.slot_label_file = 'data/train/train_slot_label.txt'
+        self.input_text_file = 'train_data.txt'
+        self.intent_label_file = 'train_intent_label.txt'
+        self.slot_label_file = 'train_slot_label.txt'
 
     @classmethod 
     def _read_file(cls,input_file,quotechar=None):
@@ -89,12 +89,15 @@ class JointProcessor(object):
             # input_text
             words = text.split()
             # intent
-            intent_label = self.intent_labels.index(intent) if intent in self.intent_labels else self.intent_labels.index('UNK')
+            intent_label = self.intent_labels.index(intent) if intent in self.intent_labels else len(self.intent_labels) + 1
             # slot
             slot_labels = []
             for s in slot.split():
-                slot_labels.append(self.slot_labels.index(s) if s in self.slot_labels else self.slot_labels.index('UNK'))
-
+                slot_labels.append(self.slot_labels.index(s) if s in self.slot_labels else len(self.slot_labels) + 1)
+            print('words:',len(words))
+            print('slot_labels:',len(slot_labels))
+            print(words)
+            print(slot_labels)
             assert len(words) == len(slot_labels)
             examples.append(InputExample(guid=guid, words=words, intent_label=intent_label, slot_labels=slot_labels))
         return examples
@@ -104,11 +107,11 @@ class JointProcessor(object):
         Args:
             mode: train, dev, test
         """
-        data_path = os.path.join(self.args.data_dir, self.args.task, mode)
+        data_path = os.path.join(self.args.data_dir, mode)
         logger.info("LOOKING AT {}".format(data_path))
         return self._create_examples(texts=self._read_file(os.path.join(data_path, self.input_text_file)),
                                      intents=self._read_file(os.path.join(data_path, self.intent_label_file)),
-                                     slots=self._read_file(os.path.join(data_path, self.slot_labels_file)),
+                                     slots=self._read_file(os.path.join(data_path, self.slot_label_file)),
                                      set_type=mode)
 
 def convert_examples_to_features(examples,max_seq_len,tokenizer,pad_token_label_id=-100,
@@ -124,7 +127,7 @@ def convert_examples_to_features(examples,max_seq_len,tokenizer,pad_token_label_
 
     features = []
     for (ex_index,example) in enumerate(examples):
-        if ex_index % 5000 = 0:
+        if ex_index % 5000 == 0:
             logger.info('Writing example %d of %d' % (ex_index,len(examples)))
 
         # tokenize word by word (for ner)
@@ -194,13 +197,13 @@ def convert_examples_to_features(examples,max_seq_len,tokenizer,pad_token_label_
 
     return features
 
-def load_and_cache_example(args,tokenizer,mode):
+def load_and_cache_examples(args,tokenizer,mode):
     processor = JointProcessor(args)
 
     # load data features from cache or dataset file
     cached_features_file = os.path.join(
         args.data_dir,
-        'cached_{}_{}_{}_{}'.format(
+        'cached_{}_{}_{}'.format(
             mode,
             list(filter(None,args.model_name_or_path.split('/'))).pop(),
             args.max_seq_len

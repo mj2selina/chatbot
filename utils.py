@@ -9,23 +9,23 @@ from seqeval.metrics import precision_score,recall_score,f1_score
 from transformers import BertConfig
 from transformers import BertTokenizer
 
-from model import JointBERT
+from model.jointbert import JointBERT
 
 MODEL_CLASSES = {
     'bert': (BertConfig,JointBERT,BertTokenizer)
     }
 MODEL_PATH_MAP = {
-    'bert': 'bert_chinese_base'
+    'bert': './model/bert_chinese_base'
     }
 
 def get_intent_labels(args):
     return [label.strip() for label in open('data/train/train_intent_label.txt','r',encoding='utf-8')]
 
-def get_intent_labels(args):
+def get_slot_labels(args):
     return [label.strip() for label in open('data/train/train_slot_label.txt','r',encoding='utf-8')]
 
 def load_tokenizer(args):
-    return BERT_CLASS[args.mode_type][2].from_pretrained(args.model_name_or_path)
+    return MODEL_CLASSES[args.model_type][2].from_pretrained(args.model_name_or_path)
 
 def init_logger():
     logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s - %(message)s',datefmt='%m/%d/%Y %H:%M:%S',level=logging.INFO)
