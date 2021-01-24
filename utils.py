@@ -19,10 +19,10 @@ MODEL_PATH_MAP = {
     }
 
 def get_intent_labels(args):
-    return [label.strip() for label in open('data/train/train_intent_label.txt','r',encoding='utf-8')]
+    return [label.strip() for label in open(os.path.join(args.data_dir,args.intent_label_file),'r',encoding='utf-8')]
 
 def get_slot_labels(args):
-    return [label.strip() for label in open('data/train/train_slot_label.txt','r',encoding='utf-8')]
+    return [label.strip() for label in open(os.path.join(args.data_dir,args.slot_label_file),'r',encoding='utf-8')]
 
 def load_tokenizer(args):
     return MODEL_CLASSES[args.model_type][2].from_pretrained(args.model_name_or_path)

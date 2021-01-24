@@ -5,7 +5,7 @@ def vocab_process(input_file_path,out_file_path):
     #vocab = set()
     with open(input_file_path,'r') as f:
         for line in f:
-            line = line.strip()
+            line = line.strip().replace(' ','').replace('\n','').replace('\t','')
             line = line.replace('\n','')
             line = line.replace(' - ','-')
             if ' ' in line:
@@ -23,6 +23,6 @@ def vocab_process(input_file_path,out_file_path):
     
     
 
-vocab_process('./data/train/train_intent_label.txt','./data/intent_label.txt')
-vocab_process('./data/train/train_slot_label.txt','./data/slot_label.txt')
+vocab_process('./data/all_intent_label.txt','./data/intent_label.txt')
+vocab_process('./data/all_slot_label.txt','./data/slot_label.txt')
     

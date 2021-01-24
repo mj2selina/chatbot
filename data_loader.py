@@ -68,9 +68,9 @@ class JointProcessor(object):
         self.intent_labels = get_intent_labels(args)
         self.slot_labels = get_slot_labels(args)
 
-        self.input_text_file = 'train_data.txt'
-        self.intent_label_file = 'train_intent_label.txt'
-        self.slot_label_file = 'train_slot_label.txt'
+        self.input_text_file = 'data.txt'
+        self.intent_label_file = 'intent_label.txt'
+        self.slot_label_file = 'slot_label.txt'
 
     @classmethod 
     def _read_file(cls,input_file,quotechar=None):
@@ -92,14 +92,8 @@ class JointProcessor(object):
             intent_label = self.intent_labels.index(intent) if intent in self.intent_labels else len(self.intent_labels) + 1
             # slot
             slot_labels = []
-            #print('----------')
-            #print(slot.split())
             for s in slot.split():
                 slot_labels.append(self.slot_labels.index(s) if s in self.slot_labels else len(self.slot_labels) + 1)
-            #print('words:',len(words))
-            #print('slot_labels:',len(slot_labels))
-            #print(words)
-            #print(slot_labels)
             assert len(words) == len(slot_labels)
             examples.append(InputExample(guid=guid, words=words, intent_label=intent_label, slot_labels=slot_labels))
         return examples
@@ -135,7 +129,7 @@ def convert_examples_to_features(examples,max_seq_len,tokenizer,pad_token_label_
         # tokenize word by word (for ner)
         tokens = []
         slot_labels_ids = []
-        for word,slot_label in zip(example.word,example.slot_labels):
+        for word,slot_label in zip(example.words,example.slot_labels):
             word_tokens = tokenizer.tokenize(word)
             if not word_tokens:
                 word_tokens = [unk_token]
@@ -159,7 +153,7 @@ def convert_examples_to_features(examples,max_seq_len,tokenizer,pad_token_label_
         slot_labels_ids = [pad_token_label_id] + slot_labels_ids
         token_type_ids = [cls_token_segment_id] + token_type_ids
 
-        input_ids = tokenizer.convert_examples_to_features(tokens)
+        input_ids = tokenizer.convert_tokens_to_ids(tokens)
 
         # The mask has 1 for real tokens and 0 for padding tokens.
         # Only real tokens are attended to.
