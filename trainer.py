@@ -57,7 +57,7 @@ class Trainer(object):
             }
         ]
         optimizer = AdamW(optimizer_grouped_parameters,lr=self.args.learning_rate,eps=self.args.adam_epsilon)
-        scheduler = get_liner_schedule_with_warmup(optimizer,num_warmup_steps=self.args.warmup_steps,num_train_steps=t_total)
+        scheduler = get_linear_schedule_with_warmup(optimizer,num_warmup_steps=self.args.warmup_steps,num_training_steps=t_total)
 
         # Train!
         logger.info('***** Running training *****')
@@ -80,12 +80,16 @@ class Trainer(object):
             for step,batch in enumerate(epoch_iterator):
                 self.model.train()
                 batch = tuple(t.to(self.device) for t in batch)
-
+                #print('batch1:',len(batch[0][0]))
+                #print('batch2:',len(batch[1][0]))
+                #print('batch3:',len(batch[2][0]))
+                #print('batch4:',batch[3])
+                #print('batch5:',len(batch[4][0]))
                 inputs = {'input_ids': batch[0],
                           'attention_mask': batch[1],
-                          'token_type_ids': batch[2],
                           'intent_label_ids': batch[3],
-                          'slot_labels_ids': batch[4]}
+                          'slot_labels_ids': batch[4],
+                          'token_type_ids': batch[2]}
                 #if self.args.model_type != 
                 outputs = self.model(**inputs)
                 loss = outputs[0]

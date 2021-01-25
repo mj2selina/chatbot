@@ -15,7 +15,7 @@ MODEL_CLASSES = {
     'bert': (BertConfig,JointBERT,BertTokenizer)
     }
 MODEL_PATH_MAP = {
-    'bert': './model/bert_chinese_base'
+    'bert': 'model/bert_chinese_base'
     }
 
 def get_intent_labels(args):

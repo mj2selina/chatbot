@@ -32,9 +32,14 @@ class JointBERT(BertPreTrainedModel):
         # Intent classifier: softmax
         if intent_label_ids is not None:
             if self.num_intent_labels == 1:
-                intent_loss = nn.MSELoss(intent_logits.view(-1), intent_label_ids.view(-1))
+                intent_loss = nn.MSELoss()(intent_logits.view(-1), intent_label_ids.view(-1))
             else:
-                intent_loss = nn.CrossEntropyLoss(intent_logits.view(-1,self.num_intent_labels), intent_label_ids.view(-1))
+                #print(self.num_intent_labels) 18685
+                #print(intent_logits.view(-1).size()) torch.Size([597920])
+                #print(intent_logits.view(-1,self.num_intent_labels).size()) torch.Size([32, 18685])
+                #print(intent_label_ids.size()) torch.Size([32])
+                #print(len(intent_label_ids))
+                intent_loss = nn.CrossEntropyLoss()(intent_logits.view(-1,self.num_intent_labels), intent_label_ids.view(-1))
             total_loss += intent_loss
         
         # Slot classifier: softmax
