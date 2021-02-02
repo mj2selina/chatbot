@@ -12,7 +12,7 @@ class JointBERT(BertPreTrainedModel):
         self.num_slot_labels = len(slot_label_lst)
         self.bert = BertModel(config=config) # Load pretrained bert
 
-        self.intetn_classifier = IntentClassifier(config.hidden_size,self.num_intent_labels,args.dropout_rate)
+        self.intent_classifier = IntentClassifier(config.hidden_size,self.num_intent_labels,args.dropout_rate)
         self.slot_classifier = SlotClassifier(config.hidden_size,self.num_slot_labels,args.dropout_rate)
 
         if args.use_crf:
@@ -25,7 +25,7 @@ class JointBERT(BertPreTrainedModel):
         sequence_output = outputs[0]
         label_output = outputs[1] #[CLS]
 
-        intent_logits = self.intetn_classifier(label_output)
+        intent_logits = self.intent_classifier(label_output)
         slot_logits = self.slot_classifier(sequence_output)
 
         total_loss = 0

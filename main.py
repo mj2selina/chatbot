@@ -27,8 +27,8 @@ if __name__ == '__main__':
 
     parser.add_argument("--model_dir",default=None,required=True,type=str,help="Path to save,load model")
     parser.add_argument("--data_dir",default='./data',type=str,help="Path to save,load model")
-    parser.add_argument("--intent_label_file",default='intent_label.txt',type=str,help="Intent Label file")
-    parser.add_argument("--slot_label_file",default='slot_label.txt',type=str,help="Slot Label file")
+    parser.add_argument("--intent_label_file",default='all_intent_label.txt',type=str,help="Intent Label file")
+    parser.add_argument("--slot_label_file",default='all_slot_label.txt',type=str,help="Slot Label file")
     parser.add_argument("--model_type",default='bert',type=str,help="Model type selected in the list: ")
     parser.add_argument("--seed",default=1234,type=int,help="random seed for initialization")
     parser.add_argument("--train_batch_size",default=32,type=int,help="Batch size for training.")
