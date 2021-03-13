@@ -24,7 +24,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-
+    parser.add_argument("--task", default='ner', type=str, help="Path to save,load model")
     parser.add_argument("--model_dir",default=None,required=True,type=str,help="Path to save,load model")
     parser.add_argument("--data_dir",default='./data',type=str,help="Path to save,load model")
     parser.add_argument("--intent_label_file",default='all_intent_label.txt',type=str,help="Intent Label file")

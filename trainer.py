@@ -67,6 +67,8 @@ class Trainer(object):
         logger.info(' Total optimization steps = %d',t_total)
         logger.info(' Logging steps = %d',self.args.logging_steps)
         logger.info(' Save steps = %d', self.args.save_steps)
+        logger.info(' intent num class = %d',len(self.intent_label_lst))
+        logger.info(' slot num class = %d', len(self.slot_label_lst))
 
         global_step = 0
         tr_loss = 0.0
@@ -153,7 +155,7 @@ class Trainer(object):
                           'attention_mask':batch[1],
                           'token_type_ids':batch[2],
                           'intent_label_ids': batch[3],
-                          'slot_label_ids':batch[4]}
+                          'slot_labels_ids':batch[4]}
                 outputs = self.model(**inputs)
                 tmp_eval_loss, (intent_logits,slot_logits) = outputs[:2]
 
@@ -176,14 +178,14 @@ class Trainer(object):
                 else:
                     slot_preds = slot_logits.detach().cpu().numpy()
 
-                out_slot_labels_ids = inputs['slot_label_ids'].detach().cpu().numpy()
+                out_slot_labels_ids = inputs['slot_labels_ids'].detach().cpu().numpy()
             else:
                 if self.args.use_crf:
                     slot_preds = np.append(slot_preds,np.array(self.model.crf.decode(slot_logits)),axis=0)
                 else:
                     slot_preds = np.append(slot_preds,slot_logits.detach().cpu().numpy(),axis=0)
 
-                out_slot_labels_ids = np.append(out_slot_labels_ids,inputs['slot_label_ids'].detach().cpu().numpy(),axis=0)
+                out_slot_labels_ids = np.append(out_slot_labels_ids,inputs['slot_labels_ids'].detach().cpu().numpy(),axis=0)
         eval_loss = eval_loss / nb_eval_steps
         results = {
             'loss': eval_loss
@@ -203,9 +205,9 @@ class Trainer(object):
             for j in range(out_slot_labels_ids.shape[1]):
                 if out_slot_labels_ids[i,j] != self.pad_token_label_id:
                     out_slot_label_list[i].append(slot_label_map[out_slot_labels_ids[i][j]])
-                    slot_pres_list[i].append(slot_label_map[slot_preds[i][j]])
+                    slot_preds_list[i].append(slot_label_map[slot_preds[i][j]])
 
-        total_result = compute_mertics(intent_preds,out_intent_label_ids,slot_preds_list,out_slot_label_list)
+        total_result = compute_metrics(intent_preds,out_intent_label_ids,slot_preds_list,out_slot_label_list)
         results.update(total_result)
 
         logger.info("***** Eval results ******")
